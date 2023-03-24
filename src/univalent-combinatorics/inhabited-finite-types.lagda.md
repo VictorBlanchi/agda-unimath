@@ -7,6 +7,7 @@ module univalent-combinatorics.inhabited-finite-types where
 <details><summary>Imports</summary>
 
 ```agda
+open import foundation.coproduct-types
 open import foundation.dependent-pair-types
 open import foundation.equivalences
 open import foundation.functions
@@ -18,10 +19,14 @@ open import foundation.subtypes
 open import foundation.subuniverses
 open import foundation.type-arithmetic-dependent-pair-types
 open import foundation.type-theoretic-principle-of-choice
+open import foundation.propositional-truncations
+open import foundation.unit-type
 open import foundation.universe-levels
 
 open import univalent-combinatorics.dependent-sum-finite-types
 open import univalent-combinatorics.finite-types
+
+open import elementary-number-theory.natural-numbers
 ```
 
 </details>
@@ -140,4 +145,23 @@ eq-equiv-Inhabited-Type-𝔽 X Y e =
       ( finite-type-Inhabited-Type-𝔽 X)
       ( finite-type-Inhabited-Type-𝔽 Y)
       ( e))
+```
+
+### Inhabited finite types are equivalent to type in `Σ (n : ℕ) UU-Fin (succ-𝔽 n)`
+
+```agda
+is-inhabited-UU-Fin :
+  {l : Level} (n : ℕ) →
+  (X : UU-Fin l (succ-ℕ n)) → is-inhabited (type-UU-Fin (succ-ℕ n) X)
+is-inhabited-UU-Fin n X =
+  apply-universal-property-trunc-Prop
+    ( has-cardinality-type-UU-Fin (succ-ℕ n) X)
+    ( is-inhabited-Prop (type-UU-Fin (succ-ℕ n) X))
+    ( λ e → unit-trunc-Prop (map-equiv e (inr star)))
+
+is-finite-and-inhabited-UU-Fin :
+  {l : Level} (n : ℕ) →
+  (X : UU-Fin l (succ-ℕ n)) → is-finite-and-inhabited (type-UU-Fin (succ-ℕ n) X)
+pr1 (is-finite-and-inhabited-UU-Fin n X) = is-finite-type-UU-Fin (succ-ℕ n) X
+pr2 (is-finite-and-inhabited-UU-Fin n X) = is-inhabited-UU-Fin n X
 ```
